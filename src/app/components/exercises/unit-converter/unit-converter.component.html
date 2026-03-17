@@ -1,0 +1,84 @@
+<div class="unit-converter">
+  <div class="header">
+    <h1>🔄 Unit Converter</h1>
+    <p class="description">Convert between different units of measurement</p>
+  </div>
+
+  <div class="converter-container">
+    <!-- Category Selection -->
+    <div class="category-selector">
+      <label>Category:</label>
+      <select [(ngModel)]="selectedCategory" (change)="onCategoryChange()" class="form-select">
+        <option *ngFor="let category of categories" [ngValue]="category">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Conversion Area -->
+    <div class="conversion-area">
+      <!-- From Unit -->
+      <div class="unit-box">
+        <label>From:</label>
+        <div class="input-group">
+          <input 
+            type="number" 
+            [(ngModel)]="inputValue" 
+            (input)="convert()"
+            class="form-input"
+            placeholder="Enter value"
+          >
+          <select [(ngModel)]="fromUnit" (change)="convert()" class="form-select unit-select">
+            <option *ngFor="let unit of selectedCategory.units" [ngValue]="unit">
+              {{ unit.name }} ({{ unit.symbol }})
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Swap Button -->
+      <div class="swap-button-container">
+        <button (click)="swapUnits()" class="swap-button" title="Swap units">
+          ⇄
+        </button>
+      </div>
+
+      <!-- To Unit -->
+      <div class="unit-box">
+        <label>To:</label>
+        <div class="input-group">
+          <input 
+            type="text" 
+            [value]="result" 
+            readonly 
+            class="form-input result-input"
+          >
+          <select [(ngModel)]="toUnit" (change)="convert()" class="form-select unit-select">
+            <option *ngFor="let unit of selectedCategory.units" [ngValue]="unit">
+              {{ unit.name }} ({{ unit.symbol }})
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result Display -->
+    <div class="result-display">
+      <p class="result-text">
+        <strong>{{ inputValue }}</strong> {{ fromUnit.symbol }} = 
+        <strong>{{ result }}</strong> {{ toUnit.symbol }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Info Section -->
+  <div class="info-section">
+    <h3>ℹ️ About this exercise</h3>
+    <ul>
+      <li>Practice Angular Forms with <code>ngModel</code></li>
+      <li>Event handling với <code>(change)</code> và <code>(input)</code></li>
+      <li>Data binding và component state management</li>
+      <li>Working với arrays và objects trong templates</li>
+    </ul>
+  </div>
+</div>

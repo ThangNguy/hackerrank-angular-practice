@@ -1,12 +1,13 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { ProblemListComponent } from './components/problem-list/problem-list.component';
-import { ProblemDetailComponent } from './components/problem-detail/problem-detail.component';
+import { UnitConverterComponent } from './components/exercises/unit-converter/unit-converter.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'problems', component: ProblemListComponent },
-  { path: 'problems/:id', component: ProblemDetailComponent },
+  
+  // Exercises routes
+  { path: 'exercises/unit-converter', component: UnitConverterComponent },
+  
   { path: '**', redirectTo: '/dashboard' }
 ];

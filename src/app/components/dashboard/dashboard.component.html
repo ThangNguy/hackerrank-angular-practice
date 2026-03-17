@@ -1,7 +1,7 @@
 <div class="dashboard">
   <div class="header">
     <h1>📊 Dashboard</h1>
-    <p class="welcome">Chào mừng bạn đến với HackerRank Practice! Theo dõi tiến độ và thống kê của bạn.</p>
+    <p class="welcome">Angular Practice Exercises - Theo dõi tiến độ và danh sách bài tập của bạn!</p>
   </div>
 
   <div class="stats-grid" *ngIf="statistics$ | async as stats">
@@ -79,51 +79,50 @@
     </div>
   </div>
 
-  <!-- Categories -->
+  <!-- All Exercises List -->
   <div class="section">
-    <h2>📚 Danh mục bài tập</h2>
-    <div class="categories-grid">
-      <div *ngFor="let category of categories" class="category-card"
-           [style.border-left-color]="category.color"
-           routerLink="/problems"
-           [queryParams]="{category: category.name}">
-        <div class="category-icon">{{ category.icon }}</div>
-        <div class="category-info">
-          <h3>{{ category.name }}</h3>
-          <div class="category-count">{{ category.count }} bài tập</div>
+    <h2>📝 Tất cả bài tập ({{ allExercises.length }})</h2>
+    <div class="exercises-list">
+      <div *ngFor="let exercise of allExercises; let i = index" 
+           class="exercise-item"
+           [class.completed]="exercise.completed">
+        <div class="exercise-number">{{ i + 1 }}</div>
+        <div class="exercise-info">
+          <h3>{{ exercise.title }}</h3>
+          <p class="exercise-description">{{ exercise.description }}</p>
+          <div class="exercise-meta">
+            <span class="difficulty-badge" [class]="getDifficultyBadgeClass(exercise.difficulty)">
+              {{ exercise.difficulty }}
+            </span>
+            <span class="category-badge">{{ exercise.category }}</span>
+            <span *ngIf="exercise.completed" class="completed-badge">✓ Hoàn thành</span>
+          </div>
         </div>
-        <div class="category-arrow">→</div>
+        <div class="exercise-actions">
+          <a [routerLink]="exercise.route" class="btn-primary">
+            {{ exercise.completed ? 'Xem lại' : 'Bắt đầu' }}
+          </a>
+        </div>
+      </div>
+
+      <div *ngIf="allExercises.length === 0" class="empty-state">
+        <p>🎯 Chưa có bài tập nào. Hãy tạo component mới để bắt đầu!</p>
       </div>
     </div>
   </div>
 
-  <!-- Quick Actions -->
+  <!-- How to Add New Exercise -->
   <div class="section">
-    <h2>🚀 Hành động nhanh</h2>
-    <div class="quick-actions">
-      <button class="action-btn primary" routerLink="/problems">
-        <span class="action-icon">📝</span>
-        <div class="action-text">
-          <div class="action-title">Làm bài tập</div>
-          <div class="action-subtitle">Bắt đầu thực hành ngay</div>
-        </div>
-      </button>
-
-      <button class="action-btn secondary" routerLink="/problems" [queryParams]="{difficulty: 'Easy'}">
-        <span class="action-icon">🎯</span>
-        <div class="action-text">
-          <div class="action-title">Bài dễ</div>
-          <div class="action-subtitle">Khởi động với bài Easy</div>
-        </div>
-      </button>
-
-      <button class="action-btn tertiary" routerLink="/problems" [queryParams]="{random: 'true'}">
-        <span class="action-icon">🎲</span>
-        <div class="action-text">
-          <div class="action-title">Ngẫu nhiên</div>
-          <div class="action-subtitle">Chọn bài tập ngẫu nhiên</div>
-        </div>
-      </button>
+    <h2>💡 Cách thêm bài tập mới</h2>
+    <div class="info-card">
+      <ol>
+        <li>Tạo component mới trong <code>src/app/components/exercises/</code></li>
+        <li>Code UI và logic cho bài tập của bạn</li>
+        <li>Thêm route trong <code>app.routes.ts</code></li>
+        <li>Đăng ký bài tập trong <code>ExerciseService</code> (initializeDefaultExercises)</li>
+        <li>Component sẽ tự động xuất hiện trong Dashboard!</li>
+      </ol>
+      <p class="tip">💡 <strong>Tip:</strong> Tham khảo component <code>unit-converter</code> để xem pattern!</p>
     </div>
   </div>
 </div>

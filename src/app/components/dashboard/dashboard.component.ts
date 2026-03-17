@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
-import { ProblemService } from '../../services/problem.service';
-import { Statistics, CategoryStats } from '../../models/statistics';
-import { Problem, ProblemCategory } from '../../models/problem';
+import { ExerciseService } from '../../services/exercise.service';
+import { Statistics } from '../../models/statistics';
+import { Exercise } from '../../models/exercise';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,23 +14,19 @@ import { Problem, ProblemCategory } from '../../models/problem';
 })
 export class DashboardComponent implements OnInit {
   statistics$: Observable<Statistics>;
-  problems$: Observable<Problem[]>;
-  categories: ProblemCategory[] = [];
+  exercises$: Observable<Exercise[]>;
+  recentExercises: Exercise[] = [];
+  allExercises: Exercise[] = [];
 
-  constructor(private problemService: ProblemService) {
-    this.statistics$ = this.problemService.getStatistics();
-    this.problems$ = this.problemService.getProblems();
+  constructor(private exerciseService: ExerciseService) {
+    this.statistics$ = this.exerciseService.getStatistics();
+    this.exercises$ = this.exerciseService.getExercises();
   }
 
   ngOnInit(): void {
-    this.categories = this.problemService.getCategories();
-
-    // Update category counts based on actual problems
-    this.problems$.subscribe(problems => {
-      this.categories = this.categories.map(category => ({
-        ...category,
-        count: problems.filter(p => p.category === category.name).length
-      }));
+    this.exercises$.subscribe(exercises => {
+      this.allExercises = exercises;
+      this.recentExercises = this.exerciseService.getRecentExercises(3);
     });
   }
 
@@ -41,5 +37,9 @@ export class DashboardComponent implements OnInit {
       case 'Hard': return '#EF4444';
       default: return '#6B7280';
     }
+  }
+
+  getDifficultyBadgeClass(difficulty: string): string {
+    return difficulty.toLowerCase();
   }
 }
