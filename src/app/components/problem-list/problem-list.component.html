@@ -1,0 +1,139 @@
+<div class="problem-list">
+  <div class="header">
+    <h1>📚 Danh sách bài tập</h1>
+    <p class="subtitle">Tìm và luyện tập các bài tập HackerRank</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="search-bar">
+      <div class="search-input-wrapper">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          placeholder="Tìm kiếm bài tập..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearchChange()"
+          class="search-input">
+      </div>
+    </div>
+
+    <div class="filter-controls">
+      <div class="filter-group">
+        <label>Danh mục:</label>
+        <select [(ngModel)]="selectedCategory" (change)="onCategoryChange()">
+          <option value="">Tất cả danh mục</option>
+          <option *ngFor="let category of categories" [value]="category.name">
+            {{ category.icon }} {{ category.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Độ khó:</label>
+        <select [(ngModel)]="selectedDifficulty" (change)="onDifficultyChange()">
+          <option value="">Tất cả</option>
+          <option value="Easy">🟢 Easy</option>
+          <option value="Medium">🟡 Medium</option>
+          <option value="Hard">🔴 Hard</option>
+        </select>
+      </div>
+
+      <div class="filter-group checkbox-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="showCompletedOnly"
+            (change)="onCompletedOnlyChange()">
+          <span class="checkmark"></span>
+          Chỉ hiện bài đã hoàn thành
+        </label>
+      </div>
+
+      <button class="clear-filters-btn" (click)="clearFilters()">
+        🗑️ Xóa bộ lọc
+      </button>
+    </div>
+  </div>
+
+  <!-- Problem List -->
+  <div class="problems-container" *ngIf="filteredProblems$ | async as problems">
+    <div class="results-info">
+      <span class="results-count">{{ problems.length }} bài tập</span>
+    </div>
+
+    <div class="problems-grid" *ngIf="problems.length > 0; else noProblems">
+      <div *ngFor="let problem of problems"
+           class="problem-card"
+           [class.completed]="problem.completed"
+           [routerLink]="'/problems/' + problem.id">
+
+        <div class="problem-status">
+          <div class="status-indicator" [class.completed]="problem.completed">
+            {{ problem.completed ? '✅' : '⭕' }}
+          </div>
+        </div>
+
+        <div class="problem-content">
+          <div class="problem-header">
+            <h3 class="problem-title">{{ problem.title }}</h3>
+            <div class="problem-badges">
+              <span class="difficulty-badge"
+                    [style.background-color]="getDifficultyColor(problem.difficulty)">
+                {{ problem.difficulty }}
+              </span>
+              <span class="category-badge">{{ problem.category }}</span>
+            </div>
+          </div>
+
+          <p class="problem-description">
+            {{ problem.description.length > 150 ? (problem.description | slice:0:150) + '...' : problem.description }}
+          </p>
+
+          <div class="problem-tags">
+            <span *ngFor="let tag of problem.tags.slice(0, 3)" class="tag">
+              {{ tag }}
+            </span>
+            <span *ngIf="problem.tags.length > 3" class="tag more">
+              +{{ problem.tags.length - 3 }}
+            </span>
+          </div>
+
+          <div class="problem-footer">
+            <div class="problem-stats">
+              <span class="stat">
+                <span class="stat-icon">🎯</span>
+                {{ problem.attempts }} lần thử
+              </span>
+              <span class="stat" *ngIf="problem.timeSpent">
+                <span class="stat-icon">⏱️</span>
+                {{ problem.timeSpent }} phút
+              </span>
+            </div>
+
+            <div class="problem-actions">
+              <button *ngIf="!problem.completed"
+                      class="action-btn complete"
+                      (click)="markAsCompleted(problem, $event)"
+                      title="Đánh dấu hoàn thành">
+                ✅
+              </button>
+              <div class="action-arrow">→</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noProblems>
+      <div class="no-problems">
+        <div class="no-problems-icon">📝</div>
+        <h3>Không tìm thấy bài tập nào</h3>
+        <p>Thử thay đổi bộ lọc để xem thêm bài tập</p>
+        <button class="clear-filters-btn" (click)="clearFilters()">
+          Xóa tất cả bộ lọc
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,129 @@
+<div class="dashboard">
+  <div class="header">
+    <h1>📊 Dashboard</h1>
+    <p class="welcome">Chào mừng bạn đến với HackerRank Practice! Theo dõi tiến độ và thống kê của bạn.</p>
+  </div>
+
+  <div class="stats-grid" *ngIf="statistics$ | async as stats">
+    <!-- Overall Statistics -->
+    <div class="stat-card primary">
+      <div class="stat-icon">🏆</div>
+      <div class="stat-details">
+        <div class="stat-number">{{ stats.completedProblems }}</div>
+        <div class="stat-label">Bài đã hoàn thành</div>
+        <div class="stat-subtitle">/ {{ stats.totalProblems }} tổng</div>
+      </div>
+    </div>
+
+    <div class="stat-card success">
+      <div class="stat-icon">📈</div>
+      <div class="stat-details">
+        <div class="stat-number">{{ stats.completionRate | number:'1.1-1' }}%</div>
+        <div class="stat-label">Tỷ lệ hoàn thành</div>
+        <div class="stat-subtitle">Tiến độ tổng thể</div>
+      </div>
+    </div>
+
+    <div class="stat-card warning">
+      <div class="stat-icon">⏱️</div>
+      <div class="stat-details">
+        <div class="stat-number">{{ stats.averageTimePerProblem | number:'1.0-0' }} phút</div>
+        <div class="stat-label">Thời gian TB</div>
+        <div class="stat-subtitle">Mỗi bài tập</div>
+      </div>
+    </div>
+
+    <div class="stat-card info">
+      <div class="stat-icon">🔥</div>
+      <div class="stat-details">
+        <div class="stat-number">{{ stats.streak }}</div>
+        <div class="stat-label">Streak hiện tại</div>
+        <div class="stat-subtitle">Ngày liên tiếp</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Difficulty Breakdown -->
+  <div class="section" *ngIf="statistics$ | async as stats">
+    <h2>📊 Thống kê theo độ khó</h2>
+    <div class="difficulty-stats">
+      <div class="difficulty-item easy">
+        <div class="difficulty-label">
+          <span class="difficulty-badge easy">Easy</span>
+          <span class="count">{{ stats.easyCompleted }}</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill easy" [style.width.%]="stats.totalProblems ? (stats.easyCompleted / stats.totalProblems * 100) : 0"></div>
+        </div>
+      </div>
+
+      <div class="difficulty-item medium">
+        <div class="difficulty-label">
+          <span class="difficulty-badge medium">Medium</span>
+          <span class="count">{{ stats.mediumCompleted }}</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill medium" [style.width.%]="stats.totalProblems ? (stats.mediumCompleted / stats.totalProblems * 100) : 0"></div>
+        </div>
+      </div>
+
+      <div class="difficulty-item hard">
+        <div class="difficulty-label">
+          <span class="difficulty-badge hard">Hard</span>
+          <span class="count">{{ stats.hardCompleted }}</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill hard" [style.width.%]="stats.totalProblems ? (stats.hardCompleted / stats.totalProblems * 100) : 0"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  <div class="section">
+    <h2>📚 Danh mục bài tập</h2>
+    <div class="categories-grid">
+      <div *ngFor="let category of categories" class="category-card"
+           [style.border-left-color]="category.color"
+           routerLink="/problems"
+           [queryParams]="{category: category.name}">
+        <div class="category-icon">{{ category.icon }}</div>
+        <div class="category-info">
+          <h3>{{ category.name }}</h3>
+          <div class="category-count">{{ category.count }} bài tập</div>
+        </div>
+        <div class="category-arrow">→</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="section">
+    <h2>🚀 Hành động nhanh</h2>
+    <div class="quick-actions">
+      <button class="action-btn primary" routerLink="/problems">
+        <span class="action-icon">📝</span>
+        <div class="action-text">
+          <div class="action-title">Làm bài tập</div>
+          <div class="action-subtitle">Bắt đầu thực hành ngay</div>
+        </div>
+      </button>
+
+      <button class="action-btn secondary" routerLink="/problems" [queryParams]="{difficulty: 'Easy'}">
+        <span class="action-icon">🎯</span>
+        <div class="action-text">
+          <div class="action-title">Bài dễ</div>
+          <div class="action-subtitle">Khởi động với bài Easy</div>
+        </div>
+      </button>
+
+      <button class="action-btn tertiary" routerLink="/problems" [queryParams]="{random: 'true'}">
+        <span class="action-icon">🎲</span>
+        <div class="action-text">
+          <div class="action-title">Ngẫu nhiên</div>
+          <div class="action-subtitle">Chọn bài tập ngẫu nhiên</div>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
